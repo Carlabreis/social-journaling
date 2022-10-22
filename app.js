@@ -5,6 +5,7 @@ const morgan = require('morgan') // when there is a request, it shows down in th
 const exphbs = require('express-handlebars') // handlebars for template engines
 const passport = require('passport')
 const session = require('express-session')
+const MemoryStore = require('memorystore')(session)
 const connectDB = require('./config/db')
 
 //Load config
@@ -28,6 +29,10 @@ app.set('view engine', '.hbs')
 
 //Sessions middleware -> it has to be abose passport middleware
 app.use(session({
+  cookie: { maxAge: 86400000 },
+  store: new MemoryStore({
+    checkPeriod: 86400000 // prune expired entries every 24h
+  }),
   secret: 'keybord cat',
   resave: false,
   saveUninitialized: false,
